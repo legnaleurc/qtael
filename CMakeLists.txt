@@ -8,16 +8,16 @@ if(APPLE)
 endif()
 
 # compiler settings
-if(${CMAKE_CXX_COMPILER_ID} MATCHES "^Clang|GNU$")
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^Clang|GNU$")
     set(EXTRA_CXX_FLAGS "-std=c++11")
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(EXTRA_CXX_FLAGS "-DBOOST_ALL_NO_LIB")
 endif()
 
 # dependencies
 find_package(Qt5Core REQUIRED)
 set(CMAKE_AUTOMOC ON)
-find_package(Boost REQUIRED COMPONENTS coroutine system context)
+find_package(Boost 1.56 REQUIRED COMPONENTS coroutine system context)
 
 # global -I
 include_directories(${Boost_INCLUDE_DIRS} "${CMAKE_SOURCE_DIR}/include")

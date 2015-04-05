@@ -9,7 +9,7 @@
 class QtCoroutine::Private: public QObject {
     Q_OBJECT
 public:
-    typedef boost::coroutines::coroutine<void> Coroutine;
+    typedef boost::coroutines::symmetric_coroutine<void> Coroutine;
 
     Private (QtCoroutine::Callback task, QObject * parent);
 
@@ -23,17 +23,17 @@ public slots:
 
 public:
     QtCoroutine::Callback task;
-    Coroutine::pull_type fork;
+    Coroutine::call_type fork;
 };
 
 class QtYield::Private {
 public:
     typedef QtCoroutine::Private::Coroutine Coroutine;
 
-    Private (QtCoroutine & task, Coroutine::push_type & yield);
+    Private(QtCoroutine & task, Coroutine::yield_type & yield);
 
     QtCoroutine & task;
-    Coroutine::push_type & yield;
+    Coroutine::yield_type & yield;
 };
 
 class SignalIsolator : public QObject {
