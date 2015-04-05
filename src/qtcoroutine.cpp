@@ -15,7 +15,7 @@ void QtCoroutine::start () {
         QtYield yield_(std::make_shared<QtYield::Private>(*this, yield));
         this->d->task(yield_);
     });
-    this->d->tail();
+    this->d->postAction();
 }
 
 void QtCoroutine::stop () {
@@ -58,7 +58,7 @@ void QtCoroutine::Private::postAction () {
     this->tail();
 }
 
-QtYield::Private::Private(QtCoroutine & task, Coroutine::yield_type & yield) :
+QtYield::Private::Private (QtCoroutine & task, Coroutine::yield_type & yield) :
 task(task),
 yield(yield) {
 }
