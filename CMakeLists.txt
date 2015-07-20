@@ -64,3 +64,9 @@ add_executable(example_04 WIN32 "examples/04_jobqueue2/main.cpp" "examples/04_jo
 target_link_libraries(example_04 Qt5::Core qtcoroutine)
 set_property(TARGET example_04 APPEND PROPERTY
     COMPILE_FLAGS ${EXTRA_CXX_FLAGS})
+
+# examples 5
+add_executable(example_05 WIN32 "examples/05_future/main.cpp")
+target_link_libraries(example_05 Qt5::Core qtcoroutine)
+set_property(TARGET example_05 APPEND PROPERTY
+    COMPILE_FLAGS ${EXTRA_CXX_FLAGS})
