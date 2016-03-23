@@ -33,7 +33,7 @@ task->start();
 
 * [CMake] >= 2.8
 * [Qt] => 5.0
-* [Boost.Coroutine] >= 1.55
+* [Boost.Coroutine] >= 1.56
 * C++11 supported toolchain
 
 ## How to Build
