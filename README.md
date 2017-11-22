@@ -31,9 +31,9 @@ task->start();
 
 ## Build Dependency
 
-* [CMake] >= 2.8
+* [CMake] >= 3.8
 * [Qt] => 5.0
-* [Boost.Coroutine] >= 1.56
+* [Boost.Coroutine] >= 1.59
 * C++11 supported toolchain
 
 ## How to Build
