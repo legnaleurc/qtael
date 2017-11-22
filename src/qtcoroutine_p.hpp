@@ -3,13 +3,13 @@
 
 #include "qtcoroutine.hpp"
 
-#include <boost/coroutine/stack_allocator.hpp>
-#include <boost/coroutine/coroutine.hpp>
+// #include <boost/coroutine/stack_allocator.hpp>
+#include <boost/coroutine2/coroutine.hpp>
 
 class QtCoroutine::Private: public QObject {
     Q_OBJECT
 public:
-    typedef boost::coroutines::symmetric_coroutine<void> Coroutine;
+    typedef boost::coroutines2::coroutine<void> Coroutine;
 
     Private (QtCoroutine::Callback task, QObject * parent);
 
@@ -23,17 +23,17 @@ public slots:
 
 public:
     QtCoroutine::Callback task;
-    Coroutine::call_type fork;
+    Coroutine::pull_type fork;
 };
 
 class QtYield::Private {
 public:
     typedef QtCoroutine::Private::Coroutine Coroutine;
 
-    Private(QtCoroutine & task, Coroutine::yield_type & yield);
+    Private(QtCoroutine & task, Coroutine::push_type & yield);
 
     QtCoroutine & task;
-    Coroutine::yield_type & yield;
+    Coroutine::push_type & yield;
 };
 
 class SignalIsolator : public QObject {

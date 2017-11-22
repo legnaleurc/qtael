@@ -11,11 +11,10 @@ d(new Private(task, this)) {
 }
 
 void QtCoroutine::start () {
-    this->d->fork = Private::Coroutine::call_type([&](Private::Coroutine::yield_type & yield)->void {
+    this->d->fork = Private::Coroutine::pull_type([&](Private::Coroutine::push_type & yield)->void {
         QtYield yield_(std::make_shared<QtYield::Private>(*this, yield));
         this->d->task(yield_);
     });
-    this->d->postAction();
 }
 
 void QtCoroutine::stop () {
@@ -43,7 +42,7 @@ void QtYield::operator () (QObject * object, const char * signal_) const {
 
 QtCoroutine::Private::Private (Callback task, QObject *parent): QObject(parent),
 task(task),
-fork() {
+fork([](Private::Coroutine::push_type &) -> void {}) {
 }
 
 void QtCoroutine::Private::tail () {
@@ -58,7 +57,7 @@ void QtCoroutine::Private::postAction () {
     this->tail();
 }
 
-QtYield::Private::Private (QtCoroutine & task, Coroutine::yield_type & yield) :
+QtYield::Private::Private (QtCoroutine & task, Coroutine::push_type & yield) :
 task(task),
 yield(yield) {
 }
