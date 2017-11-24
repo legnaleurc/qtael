@@ -3,7 +3,6 @@
 
 #include "qtcoroutine.hpp"
 
-// #include <boost/coroutine/stack_allocator.hpp>
 #include <boost/coroutine2/coroutine.hpp>
 
 class QtCoroutine::Private: public QObject {
