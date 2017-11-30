@@ -45,21 +45,26 @@ namespace detail {
 class SignalIsolator : public QObject {
     Q_OBJECT
 public:
-    template<typename ...Args>
-    void proxy (Args&&... args) {
-        this->_args = {args...};
-        emit this->resolved();
-    }
+    SignalIsolator ()
+        : QObject()
+        , args()
+    {}
 
     const QVariantList & getResult () const {
-        return this->_args;
+        return this->args;
+    }
+
+    template<typename ...Args>
+    void proxy (Args&&... args) {
+        this->args = {args...};
+        emit this->resolved();
     }
 
 signals:
     void resolved ();
 
 private:
-    QVariantList _args;
+    QVariantList args;
 };
 
 
