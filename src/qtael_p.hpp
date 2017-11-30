@@ -18,13 +18,11 @@ class Async::Private : public QObject {
 public:
     Private (Function task, QObject * parent);
 
-    void tail ();
-
 signals:
     void finished ();
 
 public slots:
-    void postAction ();
+    void onResolve ();
 
 public:
     Function task;
