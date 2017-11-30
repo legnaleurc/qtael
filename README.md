@@ -1,21 +1,21 @@
-# QtCoroutine
+# Qt Asynchronous Event Loop
 
-This library integrates [Boost.Coroutine] into [Qt].
+This library integrates [Boost.Coroutine2] into [Qt].
 
-You can **yield** in an event loop, instead of creating `QEventLoop` to wait
+You can **await** in an event loop, instead of creating `QEventLoop` to wait
 something done.
 
 ## Example
 
 ```cpp
-auto task = new QtCoroutine([](const QtYield & yield)->void {
+auto task = new qtael::Async([](const qtael::Await & await) -> void {
     QNetworkAccessManager nasm;
-    QUrl url("https://www.google.com/");
-    QNetworkRequest request(url);
+    QUrl url{"https://www.google.com/"};
+    QNetworkRequest request{url};
 
     auto reply = nasm.get(request);
-    // NOTE yield to main event loop until request finished
-    yield(reply, SIGNAL(finished()));
+    // NOTE yield to main event loop until the request finished
+    await(reply, &QNetworkReply::finished);
 
     auto data = reply->readAll();
     reply->deleteLater();
@@ -23,18 +23,19 @@ auto task = new QtCoroutine([](const QtYield & yield)->void {
     qDebug() << data;
 });
 
-// NOTE when coroutine finished (i.e. reaches end or return), `finished()` emitted
+// NOTE When the asynchronous function finished (i.e. reaches end or return),
+// signal `finished()` will be emitted.
 task->connect(task, SIGNAL(finished()), SLOT(deleteLater()));
-// NOTE start this task, will not block event loop
+// NOTE start this task, and it will not block the event loop
 task->start();
 ```
 
 ## Build Dependency
 
 * [CMake] >= 3.8
-* [Qt] => 5.0
-* [Boost.Coroutine] >= 1.59
-* C++11 supported toolchain
+* [Qt] => 5.6
+* [Boost.Coroutine2] >= 1.59
+* C++14 supported toolchain
 
 ## How to Build
 
@@ -52,6 +53,6 @@ make install
 ```
 
 
-[Boost.Coroutine]: http://www.boost.org/
-[CMake]: http://www.cmake.org/
-[Qt]: http://qt-project.org/
+[Boost.Coroutine2]: https://github.com/boostorg/coroutine2
+[CMake]: https://cmake.org/
+[Qt]: https://www.qt.io/
