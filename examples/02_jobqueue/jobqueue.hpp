@@ -5,24 +5,25 @@
 
 #include <QtCore/QObject>
 
-#include "qtcoroutine.hpp"
+#include "qtael.hpp"
+
 
 class JobQueue: public QObject {
     Q_OBJECT
 public:
     JobQueue ();
 
-    QtCoroutine * setTimeout (int msIntevel, QtCoroutine::Callback callback);
+    qtael::Async * setTimeout (int msIntevel, qtael::Function callback);
 
 private slots:
     void _dequeue ();
     void _reset ();
 
 private:
-    void _enqueue (QtCoroutine::Callback callback);
+    void _enqueue (qtael::Function callback);
 
-    std::queue<QtCoroutine::Callback> _queue;
-    QtCoroutine::Callback _currentCallback;
+    std::queue<qtael::Function> _queue;
+    qtael::Function _currentCallback;
 };
 
 #endif

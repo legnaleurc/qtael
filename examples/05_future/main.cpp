@@ -5,7 +5,7 @@
 
 #include <QtCore/QtDebug>
 
-#include "qtcoroutine.hpp"
+#include "qtael.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -20,8 +20,9 @@ int main(int argc, char *argv[]) {
 
     QFutureWatcher<int> watcher;
     watcher.setFuture(future);
-    auto b = new QtCoroutine([&watcher](const QtYield & yield)->void {
-        yield(&watcher, SIGNAL(finished()));
+    auto b = new qtael::Async([&watcher](const qtael::Await & await)->void {
+        using T = QFutureWatcher<int>;
+        await(static_cast<QFutureWatcherBase*>(&watcher), &T::finished);
         qDebug() << "result" << watcher.result();
     });
     // NOTE when coroutine finished (i.e. reaches end or return), `finished()` emitted

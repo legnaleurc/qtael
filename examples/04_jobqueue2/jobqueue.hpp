@@ -6,14 +6,15 @@
 
 #include <QtCore/QObject>
 
-#include "qtcoroutine.hpp"
+#include "qtael.hpp"
+
 
 class JobQueue: public QObject {
     Q_OBJECT
 public:
     JobQueue ();
 
-    qint64 setTimeout (int msIntevel, QtCoroutine::Callback callback);
+    qint64 setTimeout (int msIntevel, qtael::Function callback);
 
     void clear(qint64 handle);
 
@@ -22,13 +23,13 @@ private slots:
     void _reset ();
 
 private:
-    void _enqueue (QtCoroutine * callback);
+    void _enqueue (qtael::Async * callback);
 
     qint64 _nextHandle;
-    typedef std::unordered_map<qint64, std::tuple<QtCoroutine *, QtCoroutine *>> HandleTable;
+    typedef std::unordered_map<qint64, std::tuple<qtael::Async *, qtael::Async *>> HandleTable;
     HandleTable _handles;
-    std::deque<QtCoroutine *> _queue;
-    QtCoroutine * _currentCallback;
+    std::deque<qtael::Async *> _queue;
+    qtael::Async * _currentCallback;
 };
 
 #endif

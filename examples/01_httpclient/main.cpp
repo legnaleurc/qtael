@@ -1,17 +1,18 @@
 #include <QtCore/QCoreApplication>
-#include <QtNetwork/QNetworkAccessManager>
 #include <QtCore/QUrl>
-#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
 
 #include <QtCore/QtDebug>
 
-#include "qtcoroutine.hpp"
+#include "qtael.hpp"
+
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
-    auto b = new QtCoroutine([](const QtYield & yield)->void {
+    auto b = new qtael::Async([](const qtael::Await & await) -> void {
         QNetworkAccessManager nasm;
         QUrl url("http://www.google.com/");
         QNetworkRequest request(url);
@@ -19,7 +20,7 @@ int main(int argc, char *argv[]) {
         auto reply = nasm.get(request);
         qDebug() << "GET http://www.google.com/";
         // NOTE yield to main event loop until request finished
-        yield(reply, SIGNAL(finished()));
+        await(reply, &QNetworkReply::finished);
 
         // follow 301/302 redirection
         auto a = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]) {
             reply->deleteLater();
             reply = nasm.get(request);
             // NOTE yield to main event loop until request finished
-            yield(reply, SIGNAL(finished()));
+            await(reply, &QNetworkReply::finished);
 
             a = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
         }
