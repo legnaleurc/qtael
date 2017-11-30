@@ -67,15 +67,23 @@ template<typename T>
 using DecayType = typename std::decay<T>::type;
 
 
+template<typename ...Args>
+using MIS = std::make_index_sequence<sizeof...(Args)>;
+
+
+template<std::size_t ...Indices>
+using IS = std::index_sequence<Indices...>;
+
+
 template<typename ...Args, std::size_t ...Indices>
-auto argsToTupleImpl (const QVariantList & args, std::index_sequence<Indices...>) {
-    return std::make_tuple(args.at(Indices).value<detail::DecayType<Args>>()...);
+auto argsToTupleImpl (const QVariantList & args, IS<Indices...>) {
+    return std::make_tuple(args.at(Indices).value<DecayType<Args>>()...);
 }
 
 
 template<typename ...Args>
 auto argsToTuple (const QVariantList & args) {
-    return argsToTupleImpl<Args...>(args, std::make_index_sequence<sizeof...(Args)>());
+    return argsToTupleImpl<Args...>(args, MIS<Args...>());
 }
 
 }
