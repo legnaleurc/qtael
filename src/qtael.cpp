@@ -17,7 +17,7 @@ Async::Async (Function task, QObject * parent)
 
 
 void Async::start () {
-    this->d->fork = Private::Coroutine::pull_type{[&](Private::Coroutine::push_type & yield) -> void {
+    this->d->fork = Receiver{[&](Sender & yield) -> void {
         Await await(std::make_shared<Await::Private>(*this, yield));
         this->d->task(await);
     }};
@@ -54,7 +54,7 @@ void Await::yield (QObject * object) const {
 Async::Private::Private (Function task, QObject *parent)
     : QObject(parent)
     , task(task)
-    , fork([](Private::Coroutine::push_type &) -> void {})
+    , fork([](Sender &) -> void {})
 {
 }
 
@@ -69,7 +69,7 @@ void Async::Private::postAction () {
     this->tail();
 }
 
-Await::Private::Private (Async & context, Coroutine::push_type & yield)
+Await::Private::Private (Async & context, Sender & yield)
     : context(context)
     , yield(yield)
 {
